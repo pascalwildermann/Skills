@@ -1,47 +1,47 @@
 import { Component, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AoBorderBeamComponent } from './ao-border-beam.component';
+import { BorderBeamComponent } from './border-beam.component';
 
 @Component({
-  imports: [AoBorderBeamComponent],
+  imports: [BorderBeamComponent],
   template: `
-    <app-ao-border-beam>
+    <app-border-beam>
       <div style="border-radius: 12px; width: 80px; height: 40px"></div>
-    </app-ao-border-beam>
+    </app-border-beam>
   `,
 })
 class MeasuredRadiusHost {}
 
 @Component({
-  imports: [AoBorderBeamComponent],
+  imports: [BorderBeamComponent],
   template: `
-    <app-ao-border-beam radius="20px">
+    <app-border-beam radius="20px">
       <div style="border-radius: 12px; width: 40px; height: 40px"></div>
-    </app-ao-border-beam>
+    </app-border-beam>
   `,
 })
 class ExplicitRadiusHost {}
 
-describe('AoBorderBeamComponent', () => {
+describe('BorderBeamComponent', () => {
   describe('inputs', () => {
-    let fixture: ComponentFixture<AoBorderBeamComponent>;
+    let fixture: ComponentFixture<BorderBeamComponent>;
     let hostElement: HTMLElement;
 
     beforeEach(async () => {
       jest.clearAllMocks();
 
       await TestBed.configureTestingModule({
-        imports: [AoBorderBeamComponent],
+        imports: [BorderBeamComponent],
       }).compileComponents();
 
-      fixture = TestBed.createComponent(AoBorderBeamComponent);
+      fixture = TestBed.createComponent(BorderBeamComponent);
       hostElement = fixture.nativeElement;
       fixture.detectChanges();
     });
 
-    it('should use a brand-colored clockwise orbit by default', () => {
-      expect(hostElement.style.getPropertyValue('--beam-color')).toBe('var(--color-border-brand-primary)');
-      expect(hostElement.style.getPropertyValue('--beam-color-end')).toBe('var(--color-border-brand-primary)');
+    it('should use a blue clockwise orbit by default', () => {
+      expect(hostElement.style.getPropertyValue('--beam-color')).toBe('#0059ff');
+      expect(hostElement.style.getPropertyValue('--beam-color-end')).toBe('#0059ff');
       expect(hostElement.style.getPropertyValue('--beam-gradient')).toBe('');
       expect(hostElement.getAttribute('data-beam-edge')).toBe('full');
       expect(hostElement.getAttribute('data-beam-active')).toBe('true');
@@ -158,5 +158,5 @@ async function renderHost(host: Type<unknown>): Promise<HTMLElement> {
   await fixture.whenStable();
   fixture.detectChanges();
 
-  return fixture.nativeElement.querySelector('app-ao-border-beam') as HTMLElement;
+  return fixture.nativeElement.querySelector('app-border-beam') as HTMLElement;
 }

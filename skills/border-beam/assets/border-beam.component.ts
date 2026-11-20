@@ -10,11 +10,11 @@ import {
   viewChild,
 } from '@angular/core';
 
-const DEFAULT_COLOR = 'var(--color-border-brand-primary)';
+const DEFAULT_COLOR = '#0059ff';
 const MIN_GRADIENT_STOPS = 2;
 
-export type AoBorderBeamEdge = 'full' | 'top' | 'bottom' | 'start' | 'end';
-export type AoBorderBeamDirection = 'clockwise' | 'counter-clockwise';
+export type BorderBeamEdge = 'full' | 'top' | 'bottom' | 'start' | 'end';
+export type BorderBeamDirection = 'clockwise' | 'counter-clockwise';
 
 function cssValue(value: string | number | null | undefined, unit: string): string | null {
   if (value === null || value === undefined || value === '') {
@@ -37,20 +37,20 @@ function cssValue(value: string | number | null | undefined, unit: string): stri
 }
 
 @Component({
-  selector: 'app-ao-border-beam',
+  selector: 'app-border-beam',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="ao-border-beam__glow" aria-hidden="true">
-      <div class="ao-border-beam__layer ao-border-beam__layer--glow"></div>
+    <div class="border-beam__glow" aria-hidden="true">
+      <div class="border-beam__layer border-beam__layer--glow"></div>
     </div>
-    <div class="ao-border-beam__layer ao-border-beam__layer--stroke" aria-hidden="true"></div>
-    <div #content class="ao-border-beam__content">
+    <div class="border-beam__layer border-beam__layer--stroke" aria-hidden="true"></div>
+    <div #content class="border-beam__content">
       <ng-content />
     </div>
   `,
-  styleUrls: ['./ao-border-beam.component.scss'],
+  styleUrls: ['./border-beam.component.scss'],
   host: {
-    class: 'ao-border-beam',
+    class: 'border-beam',
     '[attr.data-beam-edge]': 'edge()', // eslint-disable-line @typescript-eslint/naming-convention
     '[attr.data-beam-fill]': 'fill() ? "true" : "false"', // eslint-disable-line @typescript-eslint/naming-convention
     '[attr.data-beam-active]': 'active() ? "true" : "false"', // eslint-disable-line @typescript-eslint/naming-convention
@@ -70,7 +70,7 @@ function cssValue(value: string | number | null | undefined, unit: string): stri
     '[style.--beam-delay]': 'delayCss()', // eslint-disable-line @typescript-eslint/naming-convention
   },
 })
-export class AoBorderBeamComponent {
+export class BorderBeamComponent {
   private readonly content = viewChild.required<ElementRef<HTMLElement>>('content');
   private readonly measuredRadius = signal<string | null>(null);
 
@@ -90,9 +90,9 @@ export class AoBorderBeamComponent {
   readonly glow = input<string | number>('12px');
   readonly spread = input<string | number>('72deg');
   readonly length = input<string | number>('40%');
-  readonly direction = input<AoBorderBeamDirection>('clockwise');
+  readonly direction = input<BorderBeamDirection>('clockwise');
   readonly active = input(true, { transform: booleanAttribute });
-  readonly edge = input<AoBorderBeamEdge>('full');
+  readonly edge = input<BorderBeamEdge>('full');
   readonly fill = input(false, { transform: booleanAttribute });
   readonly delay = input<string | number>('0s');
 

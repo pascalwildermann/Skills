@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/angular';
-import { AoBorderBeamComponent } from '../ao-border-beam.component';
+import { BorderBeamComponent } from '../border-beam.component';
 
 export default {
-  title: 'Design-System/Elements/Border Beam',
-  component: AoBorderBeamComponent,
+  title: 'Elements/Border Beam',
+  component: BorderBeamComponent,
   tags: ['autodocs'],
   parameters: {
     docs: {
@@ -16,21 +16,21 @@ export default {
 } as Meta;
 
 export const Default = () => ({
-  component: AoBorderBeamComponent,
+  component: BorderBeamComponent,
   template: `
-    <app-ao-border-beam>
+    <app-border-beam>
       <button type="button" style="border: 0; border-radius: 12px; padding: 12px 20px">Continue</button>
-    </app-ao-border-beam>
+    </app-border-beam>
   `,
 });
 
 export const Gradient = () => ({
-  component: AoBorderBeamComponent,
+  component: BorderBeamComponent,
   template: `
-    <app-ao-border-beam
-      [color]="['var(--color-border-brand-primary)', 'var(--color-border-brand-secondary)']"
+    <app-border-beam
+      [color]="['#0059ff', '#73a4ff']"
       duration="6s">
       <button type="button" style="border: 0; border-radius: 16px; padding: 24px 32px">Continue</button>
-    </app-ao-border-beam>
+    </app-border-beam>
   `,
 });

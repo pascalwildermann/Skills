@@ -14,7 +14,7 @@
 }
 
 :host {
-  --beam-color: var(--color-border-brand-primary);
+  --beam-color: #0059ff;
   --beam-color-end: var(--beam-color);
   --beam-duration: 4s;
   --beam-width: 1.5px;
@@ -44,7 +44,7 @@
   width: 100%;
 }
 
-.ao-border-beam__content {
+.border-beam__content {
   position: relative;
   z-index: 1;
   display: block;
@@ -52,26 +52,26 @@
   pointer-events: auto;
 }
 
-:host([data-beam-fill='true']) .ao-border-beam__content {
+:host([data-beam-fill='true']) .border-beam__content {
   display: grid;
   min-width: 0;
 }
 
-.ao-border-beam__glow,
-.ao-border-beam__layer {
+.border-beam__glow,
+.border-beam__layer {
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
 }
 
-.ao-border-beam__glow {
+.border-beam__glow {
   z-index: 0;
   opacity: calc(var(--beam-strength) * 0.7);
   filter: blur(var(--beam-glow));
 }
 
-.ao-border-beam__layer {
+.border-beam__layer {
   box-sizing: border-box;
   padding: var(--beam-layer-width);
   background: var(
@@ -96,25 +96,25 @@
   animation: border-beam-spin var(--beam-duration) linear var(--beam-delay) infinite;
 }
 
-.ao-border-beam__layer--stroke {
+.border-beam__layer--stroke {
   --beam-layer-width: var(--beam-width);
   z-index: 2;
   opacity: var(--beam-strength);
 }
 
-.ao-border-beam__layer--glow {
+.border-beam__layer--glow {
   --beam-layer-width: calc(var(--beam-width) + var(--beam-glow) * 0.45);
 }
 
-:host([data-beam-active='false']) .ao-border-beam__layer {
+:host([data-beam-active='false']) .border-beam__layer {
   animation-play-state: paused;
 }
 
-:host([data-beam-direction='counter-clockwise']) .ao-border-beam__layer {
+:host([data-beam-direction='counter-clockwise']) .border-beam__layer {
   animation-direction: reverse;
 }
 
-:host([data-beam-glow='off']) .ao-border-beam__glow {
+:host([data-beam-glow='off']) .border-beam__glow {
   display: none;
 }
 
@@ -129,7 +129,7 @@
 }
 
 // Single edge: the ring becomes a bar on that side. The bar follows the inline direction for start and end.
-:host([data-beam-edge]:not([data-beam-edge='full'])) .ao-border-beam__layer {
+:host([data-beam-edge]:not([data-beam-edge='full'])) .border-beam__layer {
   padding: 0;
   border-radius: 0;
   mask: none;
@@ -141,7 +141,7 @@
   background-repeat: no-repeat;
 }
 
-:host([data-beam-edge='top']) .ao-border-beam__layer {
+:host([data-beam-edge='top']) .border-beam__layer {
   inset-block-start: 0;
   inset-inline: 0;
   inset-block-end: auto;
@@ -150,7 +150,7 @@
   animation-name: border-beam-line-x;
 }
 
-:host([data-beam-edge='bottom']) .ao-border-beam__layer {
+:host([data-beam-edge='bottom']) .border-beam__layer {
   inset-block-start: auto;
   inset-inline: 0;
   inset-block-end: 0;
@@ -159,7 +159,7 @@
   animation-name: border-beam-line-x;
 }
 
-:host([data-beam-edge='start']) .ao-border-beam__layer {
+:host([data-beam-edge='start']) .border-beam__layer {
   inset-block: 0;
   inset-inline: 0 auto;
   width: var(--beam-layer-width);
@@ -167,7 +167,7 @@
   animation-name: border-beam-line-y;
 }
 
-:host([data-beam-edge='end']) .ao-border-beam__layer {
+:host([data-beam-edge='end']) .border-beam__layer {
   inset-block: 0;
   inset-inline: auto 0;
   width: var(--beam-layer-width);
@@ -176,11 +176,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :host([data-beam-edge]) .ao-border-beam__glow {
+  :host([data-beam-edge]) .border-beam__glow {
     display: none;
   }
 
-  :host([data-beam-edge]) .ao-border-beam__layer {
+  :host([data-beam-edge]) .border-beam__layer {
     animation: none;
     background: var(--beam-color);
     filter: none;
