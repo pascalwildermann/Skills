@@ -1,0 +1,222 @@
+// Traveling border beam. Component-scoped. Do not paste these rules into a global stylesheet.
+//
+// Two layers ride the outline: a stroke, and a glow. Each layer is a conic gradient (full orbit)
+// or a linear gradient (single edge), masked to a ring or a bar. The glow sits inside a wrapper
+// that is blurred, not the ring itself. A mask clips its own blur, so the wrapper carries the blur
+// and the bloom spreads past the element edge.
+// @property lets --beam-angle interpolate. Each layer animates its own angle (inherits: false).
+// prefers-reduced-motion leaves a static stroke in --beam-color and drops the glow.
+
+@property --beam-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+:host {
+  --beam-color: var(--color-border-brand-primary);
+  --beam-color-end: var(--beam-color);
+  --beam-duration: 4s;
+  --beam-width: 1.5px;
+  --beam-radius: 0px;
+  --beam-strength: 1;
+  --beam-glow: 12px;
+  --beam-spread: 72deg;
+  --beam-length: 40%;
+  --beam-delay: 0s;
+  --beam-line-angle: 90deg;
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  border-radius: var(--beam-radius);
+  pointer-events: none;
+}
+
+:host([data-beam-fill='false']) {
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+:host([data-beam-fill='true']) {
+  display: grid;
+  width: 100%;
+}
+
+.ao-border-beam__content {
+  position: relative;
+  z-index: 1;
+  display: block;
+  border-radius: inherit;
+  pointer-events: auto;
+}
+
+:host([data-beam-fill='true']) .ao-border-beam__content {
+  display: grid;
+  min-width: 0;
+}
+
+.ao-border-beam__glow,
+.ao-border-beam__layer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.ao-border-beam__glow {
+  z-index: 0;
+  opacity: calc(var(--beam-strength) * 0.7);
+  filter: blur(var(--beam-glow));
+}
+
+.ao-border-beam__layer {
+  box-sizing: border-box;
+  padding: var(--beam-layer-width);
+  background: var(
+    --beam-gradient,
+    conic-gradient(
+      from var(--beam-angle) at 50% 50%,
+      transparent 0deg,
+      var(--beam-color) calc(var(--beam-spread) * 0.45),
+      var(--beam-color-end) var(--beam-spread),
+      transparent calc(var(--beam-spread) + 48deg),
+      transparent 360deg
+    )
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  animation: border-beam-spin var(--beam-duration) linear var(--beam-delay) infinite;
+}
+
+.ao-border-beam__layer--stroke {
+  --beam-layer-width: var(--beam-width);
+  z-index: 2;
+  opacity: var(--beam-strength);
+}
+
+.ao-border-beam__layer--glow {
+  --beam-layer-width: calc(var(--beam-width) + var(--beam-glow) * 0.45);
+}
+
+:host([data-beam-active='false']) .ao-border-beam__layer {
+  animation-play-state: paused;
+}
+
+:host([data-beam-direction='counter-clockwise']) .ao-border-beam__layer {
+  animation-direction: reverse;
+}
+
+:host([data-beam-glow='off']) .ao-border-beam__glow {
+  display: none;
+}
+
+:host([data-beam-edge='top']),
+:host([data-beam-edge='bottom']) {
+  --beam-line-angle: 90deg;
+}
+
+:host([data-beam-edge='start']),
+:host([data-beam-edge='end']) {
+  --beam-line-angle: 180deg;
+}
+
+// Single edge: the ring becomes a bar on that side. The bar follows the inline direction for start and end.
+:host([data-beam-edge]:not([data-beam-edge='full'])) .ao-border-beam__layer {
+  padding: 0;
+  border-radius: 0;
+  mask: none;
+  -webkit-mask: none;
+  background: var(
+    --beam-line,
+    linear-gradient(var(--beam-line-angle), transparent, var(--beam-color), var(--beam-color-end), transparent)
+  );
+  background-repeat: no-repeat;
+}
+
+:host([data-beam-edge='top']) .ao-border-beam__layer {
+  inset-block-start: 0;
+  inset-inline: 0;
+  inset-block-end: auto;
+  height: var(--beam-layer-width);
+  background-size: var(--beam-length) 100%;
+  animation-name: border-beam-line-x;
+}
+
+:host([data-beam-edge='bottom']) .ao-border-beam__layer {
+  inset-block-start: auto;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: var(--beam-layer-width);
+  background-size: var(--beam-length) 100%;
+  animation-name: border-beam-line-x;
+}
+
+:host([data-beam-edge='start']) .ao-border-beam__layer {
+  inset-block: 0;
+  inset-inline: 0 auto;
+  width: var(--beam-layer-width);
+  background-size: 100% var(--beam-length);
+  animation-name: border-beam-line-y;
+}
+
+:host([data-beam-edge='end']) .ao-border-beam__layer {
+  inset-block: 0;
+  inset-inline: auto 0;
+  width: var(--beam-layer-width);
+  background-size: 100% var(--beam-length);
+  animation-name: border-beam-line-y;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-beam-edge]) .ao-border-beam__glow {
+    display: none;
+  }
+
+  :host([data-beam-edge]) .ao-border-beam__layer {
+    animation: none;
+    background: var(--beam-color);
+    filter: none;
+  }
+}
+
+@keyframes border-beam-spin {
+  0% {
+    --beam-angle: 0deg;
+  }
+
+  50% {
+    --beam-angle: 180deg;
+  }
+
+  100% {
+    --beam-angle: 360deg;
+  }
+}
+
+@keyframes border-beam-line-x {
+  from {
+    background-position: -40% 50%;
+  }
+
+  to {
+    background-position: 140% 50%;
+  }
+}
+
+@keyframes border-beam-line-y {
+  from {
+    background-position: 50% -40%;
+  }
+
+  to {
+    background-position: 50% 140%;
+  }
+}
